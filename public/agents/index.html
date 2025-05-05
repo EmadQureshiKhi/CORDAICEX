@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CordAI - Create Agent</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/styles/variables.css">
+    <link rel="stylesheet" href="/styles/themes.css">
+    <link rel="stylesheet" href="/styles/layout.css">
+    <link rel="stylesheet" href="/styles/sidebar.css">
+    <link rel="stylesheet" href="/styles/styles.css">
+    <style>
+        .template-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            padding: 1.5rem;
+        }
+
+        .template-card {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-light);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .template-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-purple);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .template-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(139, 92, 246, 0.15);
+        }
+
+        .template-card:hover::before {
+            opacity: 1;
+        }
+
+        .template-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--gradient-purple);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .template-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .template-description {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            line-height: 1.6;
+        }
+
+        .template-features {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .template-features li {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .template-features li::before {
+            content: '•';
+            position: absolute;
+            left: 0.5rem;
+            color: var(--accent-primary);
+        }
+
+        .coming-soon-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: var(--accent-primary);
+            color: white;
+            font-size: 0.75rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+            font-weight: 500;
+        }
+
+        .welcome-container {
+            padding: 0;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header-section {
+            padding: 2rem;
+            text-align: center;
+            border-bottom: 1px solid var(--border-light);
+            background: var(--bg-secondary);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .header-section h1 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            background: var(--gradient-purple);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header-section p {
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .scrollable-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem;
+            scrollbar-width: thin;
+            scrollbar-color: var(--accent-primary) var(--bg-darker);
+        }
+
+        .scrollable-content::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .scrollable-content::-webkit-scrollbar-track {
+            background: var(--bg-darker);
+            border-radius: 4px;
+        }
+
+        .scrollable-content::-webkit-scrollbar-thumb {
+            background: var(--accent-primary);
+            border-radius: 4px;
+        }
+
+        .scrollable-content::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-secondary);
+        }
+
+        .main-content {
+            height: 100vh;
+            padding: 1.5rem;
+            overflow: hidden;
+        }
+    </style>
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        })();
+    </script>
+</head>
+<body>
+    <button class="menu-toggle" id="menuToggle">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 12h18M3 6h18M3 18h18"/>
+        </svg>
+    </button>
+
+    <aside class="sidebar">
+        <div class="logo">
+            <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMTIgMkM2LjQ4IDIgMiA2LjQ4IDIgMTJzNC40OCAxMCAxMCAxMCAxMC00LjQ4IDEwLTEwUzE3LjUyIDIgMTIgMnptNS4xNCAxNC4yN2wtMS4zNSAxLjM1Yy0uMjguMjgtLjczLjI4LTEuMDEgMGwtMi4yLTIuMi0yLjIgMi4yYy0uMjguMjgtLjczLjI4LTEuMDEgMGwtMS4zNS0xLjM1Yy0uMjgtLjI4LS4yOC0uNzMgMC0xLjAxbDIuMi0yLjItMi4yLTIuMmMtLjI4LS4yOC0uMjgtLjczIDAtMS4wMWwxLjM1LTEuMzVjLjI4LS4yOC43My0uMjggMS4wMSAwbDIuMiAyLjIgMi4yLTIuMmMuMjgtLjI4LjczLS4yOCAxLjAxIDBsMS4zNSAxLjM1Yy4yOC4yOC4yOC43MyAwIDEuMDFsLTIuMiAyLjIgMi4yIDIuMmMuMjguMjguMjguNzMgMCAxLjAxeiIgZmlsbD0iIzhiNWNmNiIvPjwvc3ZnPg==" alt="CordAI Logo" width="32" height="32">
+            CordAI
+        </div>
+        <nav class="nav-section">
+            <a href="/home" class="nav-item" id="homeLink">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                    <polyline points="9 22 9 12 15 12 15 22"/>
+                </svg>
+                <span>Home</span>
+            </a>
+            <div class="nav-footer">
+                <button class="nav-item theme-toggle" id="themeToggle">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="5"/>
+                        <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+                    </svg>
+                    <span>Theme</span>
+                </button>
+                <a href="https://x.com/CordAILabs" target="_blank" rel="noopener noreferrer" class="nav-item">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"/>
+                    </svg>
+                    <span>Twitter</span>
+                </a>
+                <a href="https://pump.fun/board" target="_blank" rel="noopener noreferrer" class="nav-item">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                    </svg>
+                    <span>PumpFun</span>
+                </a>
+                <a href="https://www.youtube.com/@CordAITech" target="_blank" rel="noopener noreferrer" class="nav-item">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"/>
+                        <polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"/>
+                    </svg>
+                    <span>YouTube</span>
+                </a>
+            </div>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="welcome-container">
+            <div class="header-section">
+                <h1>Create Your AI Agent</h1>
+                <p>Choose from our collection of powerful AI templates to create your custom agent. Each template is designed for specific use cases and can be customized to your needs.</p>
+            </div>
+            <div class="scrollable-content">
+                <div class="template-grid">
+                    <div class="template-card">
+                        <span class="coming-soon-badge">Coming Soon</span>
+                        <div class="template-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 2l10 6.5v7L12 22l-10-6.5v-7L12 2z"/>
+                            </svg>
+                        </div>
+                        <h3 class="template-title">Custom AI Model</h3>
+                        <p class="template-description">Create and deploy your own AI models using AutoML capabilities.</p>
+                        <ul class="template-features">
+                            <li>Sentiment analysis</li>
+                            <li>Churn prediction</li>
+                            <li>Fraud detection</li>
+                        </ul>
+                    </div>
+
+                    <div class="template-card">
+                        <span class="coming-soon-badge">Coming Soon</span>
+                        <div class="template-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                            </svg>
+                        </div>
+                        <h3 class="template-title">Text Generation</h3>
+                        <p class="template-description">Generate professional text content using advanced NLP.</p>
+                        <ul class="template-features">
+                            <li>Email drafts</li>
+                            <li>Blog post outlines</li>
+                            <li>Social media content</li>
+                        </ul>
+                    </div>
+
+                    <div class="template-card">
+                        <span class="coming-soon-badge">Coming Soon</span>
+                        <div class="template-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                            </svg>
+                        </div>
+                        <h3 class="template-title">Recommendation System</h3>
+                        <p class="template-description">Smart template suggestions based on user preferences.</p>
+                        <ul class="template-features">
+                            <li>Personalized recommendations</li>
+                            <li>Usage-based suggestions</li>
+                            <li>Smart template matching</li>
+                        </ul>
+                    </div>
+
+                    <div class="template-card">
+                        <span class="coming-soon-badge">Coming Soon</span>
+                        <div class="template-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7"/>
+                                <line x1="16" y1="5" x2="22" y2="5"/>
+                                <line x1="19" y1="2" x2="19" y2="8"/>
+                            </svg>
+                        </div>
+                        <h3 class="template-title">Data Analysis</h3>
+                        <p class="template-description">Analyze datasets and generate visual insights.</p>
+                        <ul class="template-features">
+                            <li>Sales forecasting</li>
+                            <li>Customer segmentation</li>
+                            <li>Trend analysis</li>
+                        </ul>
+                    </div>
+
+                    <div class="template-card">
+                        <span class="coming-soon-badge">Coming Soon</span>
+                        <div class="template-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"/>
+                                <path d="M12 16v-4"/>
+                                <path d="M12 8h.01"/>
+                            </svg>
+                        </div>
+                        <h3 class="template-title">AI Chatbot</h3>
+                        <p class="template-description">Deploy customizable chatbots for various industries.</p>
+                        <ul class="template-features">
+                            <li>Customer support</li>
+                            <li>E-commerce assistance</li>
+                            <li>Healthcare guidance</li>
+                        </ul>
+                    </div>
+
+                    <div class="template-card">
+                        <span class="coming-soon-badge">Coming Soon</span>
+                        <div class="template-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                            </svg>
+                        </div>
+                        <h3 class="template-title">Blockchain Analytics</h3>
+                        <p class="template-description">Advanced blockchain data analysis tools.</p>
+                        <ul class="template-features">
+                            <li>Price prediction</li>
+                            <li>Fraud detection</li>
+                            <li>Smart contract analysis</li>
+                        </ul>
+                    </div>
+
+                    <div class="template-card">
+                        <span class="coming-soon-badge">Coming Soon</span>
+                        <div class="template-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                                <circle cx="8.5" cy="8.5" r="1.5"/>
+                                <polyline points="21 15 16 10 5 21"/>
+                            </svg>
+                        </div>
+                        <h3 class="template-title">Document Processing</h3>
+                        <p class="template-description">Process and analyze documents and images.</p>
+                        <ul class="template-features">
+                            <li>OCR extraction</li>
+                            <li>Image classification</li>
+                            <li>Document summarization</li>
+                        </ul>
+                    </div>
+
+                    <div class="template-card">
+                        <span class="coming-soon-badge">Coming Soon</span>
+                        <div class="template-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                            </svg>
+                        </div>
+                        <h3 class="template-title">Explainable AI</h3>
+                        <p class="template-description">Understand AI decisions with clear explanations.</p>
+                        <ul class="template-features">
+                            <li>Prediction explanations</li>
+                            <li>Bias detection</li>
+                            <li>Model transparency</li>
+                        </ul>
+                    </div>
+
+                    <div class="template-card">
+                        <span class="coming-soon-badge">Coming Soon</span>
+                        <div class="template-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                <polyline points="14 2 14 8 20 8"/>
+                                <line x1="12" y1="18" x2="12" y2="12"/>
+                                <line x1="9" y1="15" x2="15" y2="15"/>
+                            </svg>
+                        </div>
+                        <h3 class="template-title">Interactive Training</h3>
+                        <p class="template-description">Train AI models interactively with your data.</p>
+                        <ul class="template-features">
+                            <li>Custom model training</li>
+                            <li>Real-time visualization</li>
+                            <li>Performance monitoring</li>
+                        </ul>
+                    </div>
+
+                    <div class="template-card">
+                        <span class="coming-soon-badge">Coming Soon</span>
+                        <div class="template-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"/>
+                                <line x1="16" y1="8" x2="2" y2="22"/>
+                                <line x1="17.5" y1="15" x2="9" y2="15"/>
+                            </svg>
+                        </div>
+                        <h3 class="template-title">Blockchain-AI Hybrid</h3>
+                        <p class="template-description">Combine AI and blockchain technologies.</p>
+                        <ul class="template-features">
+                            <li>Smart contract generation</li>
+                            <li>Predictive analytics</li>
+                            <li>Tokenomics modeling</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="/script.js"></script>
+</body>
+</html>

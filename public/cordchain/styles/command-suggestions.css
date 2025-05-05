@@ -1,0 +1,231 @@
+.command-suggestions {
+    position: absolute;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-light);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    max-height: 200px;
+    overflow-y: auto;
+    width: 100%;
+    z-index: 1000;
+}
+
+.command-suggestion {
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: var(--text-primary);
+    font-size: 0.875rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.command-suggestion:hover {
+    background: var(--accent-primary);
+    color: white;
+}
+
+.command-suggestion:hover .description {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.command-suggestion:not(:last-child) {
+    border-bottom: 1px solid var(--border-light);
+}
+
+.command-suggestion.selected {
+    background: var(--accent-primary);
+    color: white;
+}
+
+.command-suggestion.selected .description {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.command-suggestion .command {
+    font-weight: 500;
+}
+
+.command-suggestion .description {
+    color: var(--text-secondary);
+    font-size: 0.75rem;
+}
+
+.command-suggestions::-webkit-scrollbar {
+    width: 6px;
+}
+
+.command-suggestions::-webkit-scrollbar-track {
+    background: var(--bg-darker);
+}
+
+.command-suggestions::-webkit-scrollbar-thumb {
+    background: var(--accent-primary);
+    border-radius: 3px;
+}
+
+.command-suggestions::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-secondary);
+}
+
+.ai-message {
+    white-space: pre-wrap;
+    font-family: monospace;
+    line-height: 1.5;
+}
+
+.ai-message br {
+    margin-bottom: 0.5em;
+}
+
+/* Model Selector Styles */
+.model-selector {
+    position: relative;
+    width: 300px;
+}
+
+.model-selector-button {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-light);
+    border-radius: 6px;
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.model-selector-button:hover {
+    background: var(--bg-darker);
+}
+
+.model-dropdown {
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    left: 50%;
+    transform: translateX(-50%);
+    width: 300px;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-light);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    display: none;
+    z-index: 1000;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.model-dropdown.active {
+    display: block;
+    animation: fadeIn 0.2s ease-out;
+}
+
+.model-search {
+    padding: 1rem;
+    border-bottom: 1px solid var(--border-light);
+    position: sticky;
+    top: 0;
+    background: var(--bg-tertiary);
+    z-index: 2;
+}
+
+.model-search input {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid var(--border-light);
+    border-radius: 4px;
+    background: var(--bg-darker);
+    color: var(--text-primary);
+    font-size: 0.875rem;
+}
+
+.model-search input:focus {
+    outline: none;
+    border-color: var(--accent-primary);
+}
+
+.model-count {
+    padding: 0.5rem 1rem;
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    border-bottom: 1px solid var(--border-light);
+    background: var(--bg-tertiary);
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+.model-options {
+    padding: 0.5rem 0;
+}
+
+.model-option {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border-bottom: 1px solid var(--border-light);
+}
+
+.model-option:last-child {
+    border-bottom: none;
+}
+
+.model-option:hover {
+    background: var(--bg-darker);
+}
+
+.model-option img {
+    width: 24px;
+    height: 24px;
+    border-radius: 4px;
+}
+
+.model-info {
+    flex: 1;
+}
+
+.model-name {
+    font-weight: 500;
+    color: var(--text-primary);
+    margin-bottom: 0.25rem;
+}
+
+.model-description {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+}
+
+.model-badge {
+    font-size: 0.625rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 12px;
+    background: var(--accent-primary);
+    color: white;
+    font-weight: 500;
+}
+
+.model-option.selected {
+    background: var(--bg-darker);
+}
+
+.model-option.hidden {
+    display: none;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -4px);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, 0);
+    }
+}

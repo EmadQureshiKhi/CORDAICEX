@@ -1,0 +1,30 @@
+/* Color schemes */
+:root[data-theme="dark"] {
+    --bg-primary: #0a0a0f;
+    --bg-secondary: #13131f;
+    --bg-tertiary: #1a1a2e;
+    --bg-darker: #090912;
+    --accent-primary: #8b5cf6;
+    --accent-secondary: #7c3aed;
+    --text-primary: #e2e8f0;
+    --text-secondary: #94a3b8;
+    --border-light: rgba(255, 255, 255, 0.1);
+    --card-bg: rgba(255, 255, 255, 0.03);
+    --gradient-purple: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%);
+    --feature-icon-bg: var(--gradient-purple);
+}
+
+:root[data-theme="ice"] {
+    --bg-primary: #FFFFFF;
+    --bg-secondary: #F0F8FF;
+    --bg-tertiary: #E6F3FF;
+    --bg-darker: #E0F0FF;
+    --accent-primary: #89CFF0;
+    --accent-secondary: #B8E2FF;
+    --text-primary: #2C3E50;
+    --text-secondary: #34495E;
+    --border-light: rgba(184, 226, 255, 0.3);
+    --card-bg: rgba(240, 248, 255, 0.5);
+    --gradient-purple: linear-gradient(135deg, #89CFF0 0%, #B8E2FF 100%);
+    --feature-icon-bg: var(--gradient-purple);
+}

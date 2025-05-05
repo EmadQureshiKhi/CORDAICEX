@@ -1,0 +1,175 @@
+/* Code Block Styles */
+.code-block {
+    position: relative;
+    background: #1e1e1e;
+    border-radius: 8px;
+    margin: 1rem 0;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    font-family: 'Fira Code', 'Consolas', monospace;
+}
+
+.code-block-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    background: #2d2d2d;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    border-bottom: 1px solid #3d3d3d;
+}
+
+.language-label {
+    color: #9cdcfe;
+    font-size: 0.85rem;
+    font-weight: 500;
+    text-transform: uppercase;
+}
+
+.copy-button {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.25rem 0.75rem;
+    background: #404040;
+    border: 1px solid #505050;
+    border-radius: 4px;
+    color: #d4d4d4;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.copy-button:hover {
+    background: #505050;
+    border-color: #606060;
+}
+
+.copy-button.copied {
+    background: #2ea043;
+    border-color: #238636;
+    color: white;
+    animation: copyFeedback 0.2s ease-in-out;
+}
+
+.copy-button.error {
+    background: #f85149;
+    border-color: #da3633;
+    color: white;
+    animation: copyFeedback 0.2s ease-in-out;
+}
+
+.code-content {
+    padding: 1rem;
+    overflow-x: auto;
+    max-height: 400px;
+}
+
+.code-content pre {
+    margin: 0;
+    padding: 0;
+}
+
+.code-content code {
+    font-family: 'Fira Code', 'Consolas', monospace;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: #d4d4d4;
+}
+
+/* Icons */
+.copy-icon, .check-icon, .error-icon {
+    width: 16px;
+    height: 16px;
+    fill: currentColor;
+}
+
+/* Animation for copy button */
+@keyframes copyFeedback {
+    0% { transform: scale(1); }
+    50% { transform: scale(0.95); }
+    100% { transform: scale(1); }
+}
+
+/* Syntax Highlighting */
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+    color: #6a9955;
+    font-style: italic;
+}
+
+.token.function {
+    color: #dcdcaa;
+}
+
+.token.keyword {
+    color: #569cd6;
+}
+
+.token.string {
+    color: #ce9178;
+}
+
+.token.number {
+    color: #b5cea8;
+}
+
+.token.boolean {
+    color: #569cd6;
+}
+
+.token.operator {
+    color: #d4d4d4;
+}
+
+.token.property {
+    color: #9cdcfe;
+}
+
+.token.class-name {
+    color: #4ec9b0;
+}
+
+.token.variable {
+    color: #9cdcfe;
+}
+
+/* Scrollbar Styling */
+.code-content::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.code-content::-webkit-scrollbar-track {
+    background: #1e1e1e;
+}
+
+.code-content::-webkit-scrollbar-thumb {
+    background: #404040;
+    border-radius: 4px;
+}
+
+.code-content::-webkit-scrollbar-thumb:hover {
+    background: #505050;
+}
+
+/* Message Formatting */
+.ai-message {
+    white-space: pre-wrap;
+    line-height: 1.6;
+}
+
+.ai-message br {
+    margin-bottom: 0.5em;
+}
+
+.ai-message ul, .ai-message ol {
+    margin: 0.5em 0;
+    padding-left: 2em;
+}
+
+.ai-message li {
+    margin: 0.25em 0;
+}

@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CordAI - Advanced AI Assistant</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/styles/variables.css">
+    <link rel="stylesheet" href="/styles/themes.css">
+    <link rel="stylesheet" href="/styles/layout.css">
+    <link rel="stylesheet" href="/styles/sidebar.css">
+    <link rel="stylesheet" href="/styles/styles.css">
+    <link rel="stylesheet" href="/styles/auth.css">
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        })();
+    </script>
+</head>
+<body>
+    <button class="menu-toggle" id="menuToggle">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 12h18M3 6h18M3 18h18"/>
+        </svg>
+    </button>
+
+    <aside class="sidebar">
+        <div class="logo">
+            CordAI
+        </div>
+        <nav class="nav-section">
+            <a href="/home" class="nav-item active" id="homeLink">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                    <polyline points="9 22 9 12 15 12 15 22"/>
+                </svg>
+                <span>Home</span>
+            </a>
+            <a href="http://localhost:3001" target="_blank" class="nav-item" id="cordaiLink">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                </svg>
+                <span>CordAI</span>
+            </a>
+            <a href="/cordchain" class="nav-item" id="cordchainLink">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                </svg>
+                <span>CordChain</span>
+            </a>
+            <div class="nav-item" id="templatesLink" style="pointer-events: none; position: relative;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/>
+                    <path d="M8 2v4M16 2v4M3 10h18"/>
+                </svg>
+                <span>Bot(Cex)</span>
+                <span style="position: absolute; top: -8px; right: -8px; background: var(--accent-primary); color: white; font-size: 0.6rem; padding: 2px 6px; border-radius: 10px; font-weight: 600;">SOON</span>
+            </div>
+            <div class="nav-item" id="apiLink" style="pointer-events: none; position: relative;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20 12V8H6a2 2 0 0 1-2-2V4m16 8v4H6a2 2 0 0 0-2 2v2"/>
+                </svg>
+                <span>Bot(Sol)</span>
+                <span style="position: absolute; top: -8px; right: -8px; background: var(--accent-primary); color: white; font-size: 0.6rem; padding: 2px 6px; border-radius: 10px; font-weight: 600;">SOON</span>
+            </div>
+            <div class="nav-footer">
+                <button class="nav-item theme-toggle" id="themeToggle">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="5"/>
+                        <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+                    </svg>
+                    <span>Theme</span>
+                </button>
+            </div>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="welcome-container" id="welcomeContainer">
+            <div id="particles-js"></div>
+            <div class="animated-gradient"></div>
+            
+            <div class="hero-section">
+                <div class="hero-content">
+                    <h1>AI Crafted for Your Unique Needs</h1>
+                    <p class="hero-subtitle">Power Up Your Crypto Journey with CordAI</p>
+                    <div class="hero-stats">
+                        <div class="stat-item">
+                            <span class="stat-number">15+</span>
+                            <span class="stat-label">Algorithms</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">10K+</span>
+                            <span class="stat-label">Solutions</span>
+                        </div>
+                    </div>
+                    <a href="http://localhost:3001" target="_blank" class="cta-button">Let's get Started →</a>
+                </div>
+                <div class="hero-image">
+                    <img src="https://i.ibb.co/k03bd7p/AI-Visualization.png" alt="AI Visualization" class="hero-visualization">
+                </div>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 2l10 6.5v7L12 22l-10-6.5v-7L12 2z"/>
+                            <path d="M12 22v-6.5"/>
+                            <path d="M22 8.5l-10 6.5"/>
+                            <path d="M2 8.5l10 6.5"/>
+                        </svg>
+                    </div>
+                    <h3>CEX Chat</h3>
+                    <p>Unlock powerful command-based trading and analytics for centralized exchanges: <br>
+
+<br>
+&bull; <code>/analyze SOL</code> — Instantly analyze any currency<br>
+&bull; <code>/search pattern bull-flag</code> — Discover chart patterns<br>
+&bull; <code>/alert price ETH &gt; 2000</code> — Set custom price alerts<br>
+&bull; <code>/tx gas</code> — Check real-time gas prices<br>
+<br></p>
+                    <a href="/cordchain" target="_blank" class="feature-button">Unlock your potential  →</a>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M12 16v-4"/>
+                            <path d="M12 8h.01"/>
+                        </svg>
+                    </div>
+                    <h3>Solana Chat</h3>
+                    <p>Seamlessly manage your Solana assets and explore the ecosystem with our integrated solana chat :<br><br>
+&bull; Check wallet balances and send SOL<br>
+&bull; Get live SOL and token prices (Jupiter SDK integration)<br>
+&bull; Explore Magic Eden NFTs<br>
+&bull; Chat, ask questions, and get instant blockchain insights<br>
+<br><br></p>
+                    <a href="http://localhost:3001" target="_blank" class="feature-button">Learn More →</a>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                    </div>
+                    <h3>Intelligent Trading Bots</h3>
+                    <p><b>CEX Bot</b><br>
+Automate your trading with 10+ advanced algorithms.<br>
+Set your investment amount, take profit, stop loss, and let the bot handle the trades and strategies 24/7.<br>
+<br>
+<b>Solana Bot</b><br>
+Take your DeFi game to the next level:<br>
+&bull; <b>Snipe tokens</b> at lightning speed<br>
+&bull; <b>AFK mode</b> for hands-free trading<br>
+&bull; <b>Copytrade</b> top wallets and strategies<br>
+<br></p>
+                    <div class="analytics-preview">
+                        <div class="graph-line"></div>
+                        <span class="analytics-stat">+16.5%</span>
+                    </div>
+                </div>
+            </div>
+
+            <section class="content-section">
+                <h2>Why Choose CordAI?</h2>
+                <div class="info-grid">
+                    <div class="info-card">
+                        <div class="info-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                                <polyline points="22 4 12 14.01 9 11.01"/>
+                            </svg>
+                        </div>
+                        <h3>Proven Vision And Real Time Data</h3>
+                        <p>Building the future of AI and blockchain with groundbreaking solutions.</p>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="3"/>
+                                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                            </svg>
+                        </div>
+                        <h3>All-in-One Crypto Assistant</h3>
+                        <p>Cutting-edge AI solutions powered by the latest technology</p>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                <circle cx="9" cy="7" r="4"/>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                            </svg>
+                        </div>
+                        <h3>Cutting-Edge Automation</h3>
+                        <p>Let our bots work for you, whether you’re trading on CEX or exploring Solana DeFi.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="content-section">
+                <h2>Our Technology Stack</h2>
+                <div class="tech-grid">
+                    <div class="tech-card">
+                        <div class="tech-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 2l10 6.5v7L12 22l-10-6.5v-7L12 2z"/>
+                            </svg>
+                        </div>
+                        <h3>Automated Trading Algorithms</h3>
+                        <p>Sophisticated AI for seamless, high-speed crypto operations</p>
+                        <div class="tech-stats">
+                            <div class="stat">
+                                <span class="stat-value">99.9%</span>
+                                <span class="stat-label">Accuracy</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-value">50ms</span>
+                                <span class="stat-label">Response Time</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tech-card">
+                        <div class="tech-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"/>
+                                <path d="M12 16v-4"/>
+                                <path d="M12 8h.01"/>
+                            </svg>
+                        </div>
+                        <h3>Natural Language Processing</h3>
+                        <p>State-of-the-art language understanding and generation</p>
+                        <div class="tech-stats">
+                            <div class="stat">
+                                <span class="stat-value">15+</span>
+                                <span class="stat-label">LLMS</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-value">95%</span>
+                                <span class="stat-label">Comprehension</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="content-section">
+                <h2>Get Started</h2>
+                <div class="enterprise-grid">
+                    <div class="enterprise-card">
+                        <h3>CordAI</h3>
+                        <ul class="feature-list">
+                            <li>Choose your chat</li>
+                            <li>Connect your wallet</li>
+                            <li>Advanced Analytics</li>
+                            <li>Let CordAI do the rest.</li>
+                        </ul>
+                        <a href="http://localhost:3001" target="_blank" class="enterprise-button">Get Started</a>
+                    </div>
+                    <div class="enterprise-card">
+                        <h3>Cordchain</h3>
+                        <ul class="feature-list">
+                            <li>Powerful Command-Based Analytics </li>
+                            <li>Centralized Exchanges</li>
+                            <li>Advanced Security</li>
+                            <li>SLA Guarantee</li>
+                        </ul>
+                        <a href="/cordchain" target="_blank" class="enterprise-button">Get Started</a>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <div id="authModal" class="auth-modal">
+        <div class="auth-modal-content">
+            <div class="auth-modal-header">
+                <h2>Connect or Login</h2>
+                <button class="close-button" onclick="closeAuthModal()">×</button>
+            </div>
+            <div class="auth-options">
+                <button class="auth-option wallet-option" onclick="connectWallet()">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+                        <path d="M16 12h.01"></path>
+                    </svg>
+                    Connect Wallet
+                </button>
+                <div class="auth-divider">
+                    <span>or</span>
+                </div>
+                <button class="auth-option email-option" onclick="showEmailLogin()">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                        <polyline points="22,6 12,13 2,6"></polyline>
+                    </svg>
+                    Continue with Email
+                </button>
+            </div>
+            <form id="emailAuthForm" class="email-auth-form" style="display: none;">
+                <div class="form-tabs">
+                    <button type="button" class="form-tab active" onclick="switchTab('login')">Login</button>
+                    <button type="button" class="form-tab" onclick="switchTab('register')">Register</button>
+                </div>
+                <div class="form-group">
+                    <input type="email" id="emailInput" placeholder="Email" required>
+                </div>
+                <div class="form-group">
+                    <input type="password" id="passwordInput" placeholder="Password" required>
+                </div>
+                <button type="submit" class="submit-button">Login</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.min.js"></script>
+    <script>
+        window.supabaseClient = supabase.createClient(
+            'https://iszhnngfqtlpgkrjdnvf.supabase.co',
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlzemhubmdmcXRscGdrcmpkbnZmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzk2MjI5OTIsImV4cCI6MjA1NTE5ODk5Mn0.8Hm7nLXTrZ9HO3fIVqFzY6gRxFYPqSmZBX_J6hD0kgU'
+        );
+    </script>
+    <script src="/scripts/auth.js"></script>
+    <script src="/script.js"></script>
+</body>
+</html>

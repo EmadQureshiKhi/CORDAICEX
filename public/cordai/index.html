@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CordAI - Chat Interface</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/styles/variables.css">
+    <link rel="stylesheet" href="/styles/themes.css">
+    <link rel="stylesheet" href="/styles/layout.css">
+    <link rel="stylesheet" href="/cordai/styles/chat.css">
+    <link rel="stylesheet" href="/cordai/styles/code-blocks.css">
+    <link rel="stylesheet" href="/styles/auth.css">
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        })();
+
+        // Initialize Supabase client before any other scripts
+        window.supabaseClient = supabase.createClient(
+            'https://iszhnngfqtlpgkrjdnvf.supabase.co',
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlzemhubmdmcXRscGdrcmpkbnZmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzk2MjI5OTIsImV4cCI6MjA1NTE5ODk5Mn0.8Hm7nLXTrZ9HO3fIVqFzY6gRxFYPqSmZBX_J6hD0kgU'
+        );
+    </script>
+    <style>
+        :root {
+            --llm-bg-primary: #faf0e6;
+            --llm-bg-secondary: #fff;
+            --llm-border: #e5e5e5;
+            --llm-text-primary: #2d2d2d;
+            --llm-text-secondary: #666;
+            --llm-accent: #8b5cf6;
+            --llm-hover: #f8f7f4;
+        }
+
+        .top-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: var(--llm-bg-primary);
+            border-bottom: 1px solid var(--llm-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 1.5rem;
+            z-index: 1000;
+        }
+
+        .model-selector {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 300px;
+        }
+
+        .model-selector-button {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--llm-bg-primary);
+            border: 1px solid var(--llm-border);
+            border-radius: 6px;
+            color: var(--llm-text-primary);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .model-selector-button:hover {
+            background: var(--llm-hover);
+        }
+
+        .model-selector-button img {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+        }
+
+        .model-dropdown {
+            position: fixed;
+            top: 70px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 300px;
+            background: var(--llm-bg-secondary);
+            border: 1px solid var(--llm-border);
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            display: none;
+            z-index: 1000;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .model-dropdown.active {
+            display: block;
+            animation: fadeIn 0.2s ease-out;
+        }
+
+        .model-search {
+            padding: 1rem;
+            border-bottom: 1px solid var(--llm-border);
+            position: sticky;
+            top: 0;
+            background: var(--llm-bg-secondary);
+            z-index: 2;
+        }
+
+        .model-search input {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid var(--llm-border);
+            border-radius: 4px;
+            background: var(--llm-bg-secondary);
+            color: var(--llm-text-primary);
+            font-size: 0.875rem;
+        }
+
+        .model-search input:focus {
+            outline: none;
+            border-color: var(--llm-accent);
+        }
+
+        .model-count {
+            padding: 0.5rem 1rem;
+            color: var(--llm-text-secondary);
+            font-size: 0.875rem;
+            border-bottom: 1px solid var(--llm-border);
+            background: var(--llm-bg-secondary);
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+
+        .model-options {
+            padding: 0.5rem 0;
+            background: var(--llm-bg-secondary);
+        }
+
+        .model-option {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border-bottom: 1px solid var(--llm-border);
+            background: var(--llm-bg-secondary);
+            color: var(--llm-text-primary);
+        }
+
+        .model-option:last-child {
+            border-bottom: none;
+        }
+
+        .model-option:hover {
+            background: var(--llm-hover);
+        }
+
+        .model-option img {
+            width: 24px;
+            height: 24px;
+            border-radius: 4px;
+        }
+
+        .model-info {
+            flex: 1;
+        }
+
+        .model-name {
+            font-weight: 500;
+            color: var(--llm-text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .model-description {
+            font-size: 0.75rem;
+            color: var(--llm-text-secondary);
+        }
+
+        .model-badge {
+            font-size: 0.625rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 12px;
+            background: var(--llm-accent);
+            color: white;
+            font-weight: 500;
+        }
+
+        .model-option.selected {
+            background: var(--llm-hover);
+        }
+
+        .model-option.hidden {
+            display: none;
+        }
+
+        .main-content {
+            margin-top: 60px;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -4px);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, 0);
+            }
+        }
+
+        /* Update other elements to use fixed color scheme */
+        .top-bar-button {
+            background: var(--llm-bg-secondary);
+            border: 1px solid var(--llm-border);
+            color: var(--llm-text-primary);
+        }
+
+        .top-bar-button:hover {
+            background: var(--llm-hover);
+        }
+
+        .chat-container {
+            background: var(--llm-bg-secondary);
+            border: 1px solid var(--llm-border);
+        }
+
+        .welcome-message h1 {
+            color: var(--llm-text-primary);
+        }
+
+        .welcome-message p {
+            color: var(--llm-text-secondary);
+        }
+
+        /* Add new styles for the auth button in top bar */
+        .top-bar-auth {
+            display: flex;
+            align-items: center;
+            margin-right: 0.75rem;
+        }
+
+        .top-bar-auth .auth-button {
+            height: 28px;
+            padding: 0 0.75rem;
+            background: var(--llm-bg-secondary);
+            border: 1px solid var(--llm-border);
+            color: var(--llm-text-primary);
+            font-size: 0.75rem;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: not-allowed;
+            opacity: 0.6;
+            position: relative;
+        }
+
+        .top-bar-auth .auth-button::after {
+            content: 'Coming Soon';
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: var(--accent-primary);
+            color: white;
+            font-size: 0.625rem;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+
+        .top-bar-auth .auth-button:hover {
+            background: var(--llm-hover);
+            transform: none;
+        }
+
+        .top-bar-auth .auth-button svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .top-bar-auth .user-profile {
+            height: 28px;
+            padding: 0 0.75rem;
+            background: var(--llm-bg-secondary);
+            border: 1px solid var(--llm-border);
+            font-size: 0.75rem;
+        }
+
+        .top-bar-auth .user-avatar {
+            width: 18px;
+            height: 18px;
+            font-size: 0.625rem;
+        }
+
+        .top-bar-auth .user-info {
+            font-size: 0.75rem;
+          color: #000;
+        }
+
+        .top-bar-auth .logout-button svg {
+            width: 14px;
+            height: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <div class="top-bar-left">
+            <div class="logo">
+                <a href="/home">
+                    <img src="https://i.ibb.co/Y0hgZJh/Untitled-1.png" alt="CordAI Logo" width="40" height="45">
+                    <span>CordAI</span>
+                </a>
+            </div>
+        </div>
+        
+        <div class="model-selector">
+            <button class="model-selector-button" id="modelSelector">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg" alt="OpenAI Logo">
+                <span>GPT-3.5</span>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M6 9l6 6 6-6"/>
+                </svg>
+            </button>
+            <div class="model-dropdown" id="modelDropdown">
+                <div class="model-search">
+                    <input type="text" placeholder="Search models." id="modelSearch">
+                </div>
+                <div class="model-count">
+                    LLMs (19)
+                </div>
+                <div class="model-options">
+                    <div class="model-option selected" data-model="gpt-3.5">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg" alt="OpenAI Logo">
+                        <div class="model-info">
+                            <div class="model-name">GPT-3.5</div>
+                            <div class="model-description">Fast and reliable for most tasks</div>
+                        </div>
+                        <span class="model-badge">Default</span>
+                    </div>
+                    <div class="model-option" data-model="gpt-4">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg" alt="OpenAI Logo">
+                        <div class="model-info">
+                            <div class="model-name">GPT-4</div>
+                            <div class="model-description">Most capable OpenAI model</div>
+                        </div>
+                        <span class="model-badge">Pro</span>
+                    </div>
+                    <div class="model-option" data-model="deepseek-r1">
+                        <img src="https://i.ibb.co/Fq7Smyd2/DEEPSEEK.png" alt="DeepSeek Logo">
+                        <div class="model-info">
+                            <div class="model-name">Deepseek R1</div>
+                            <div class="model-description">Advanced reasoning capabilities</div>
+                        </div>
+                        <span class="model-badge">Pro</span>
+                    </div>
+                    <div class="model-option" data-model="deepseek-v3">
+                        <img src="https://i.ibb.co/Fq7Smyd2/DEEPSEEK.png" alt="DeepSeek Logo">
+                        <div class="model-info">
+                            <div class="model-name">Deepseek v3</div>
+                            <div class="model-description">Latest DeepSeek model</div>
+                        </div>
+                        <span class="model-badge">Pro</span>
+                    </div>
+                    <div class="model-option" data-model="codex">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg" alt="OpenAI Logo">
+                        <div class="model-info">
+                            <div class="model-name">Codex</div>
+                            <div class="model-description">Specialized in code generation</div>
+                        </div>
+                        <span class="model-badge">Pro</span>
+                    </div>
+                    <div class="model-option" data-model="dalle">
+                        <img src="https://i.ibb.co/RpxJs5QY/dalle.jpg" alt="DALL·E Logo">
+                        <div class="model-info">
+                            <div class="model-name">DALL·E</div>
+                            <div class="model-description">Image generation model</div>
+                        </div>
+                        <span class="model-badge">Pro</span>
+                    </div>
+                    <div class="model-option" data-model="whisper">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg" alt="OpenAI Logo">
+                        <div class="model-info">
+                            <div class="model-name">Whisper</div>
+                            <div class="model-description">Speech recognition model</div>
+                        </div>
+                        <span class="model-badge">Pro</span>
+                    </div>
+                    <div class="model-option" data-model="claude">
+                        <img src="https://i.ibb.co/d12wvT4/Claude.webp" alt="Claude Logo">
+                        <div class="model-info">
+                            <div class="model-name">Claude</div>
+                            <div class="model-description">Anthropic's flagship model</div>
+                        </div>
+                        <span class="model-badge">Pro</span>
+                    </div>
+                    <div class="model-option" data-model="claude-sonnet">
+                        <img src="https://i.ibb.co/d12wvT4/Claude.webp" alt="Claude Logo">
+                        <div class="model-info">
+                            <div class="model-name">Claude Sonnet 3.5</div>
+                            <div class="model-description">Balanced performance model</div>
+                        </div>
+                        <span class="model-badge">Pro</span>
+                    </div>
+                    <div class="model-option" data-model="claude-haiku">
+                        <img src="https://i.ibb.co/d12wvT4/Claude.webp" alt="Claude Logo">
+                        <div class="model-info">
+                            <div class="model-name">Claude Haiku 3.5</div>
+                            <div class="model-description">Fast, efficient model</div>
+                        </div>
+                        <span class="model-badge">Pro</span>
+                    </div>
+                    <div class="model-option" data-model="llama-70b">
+                        <img src="https://i.ibb.co/27vm4vyj/llama.webp" alt="Meta AI Logo">
+                        <div class="model-info">
+                            <div class="model-name">Llama-3.3 70B</div>
+                            <div class="model-description">Meta's 70B parameter model</div>
+                        </div>
+                        <span class="model-badge">Pro</span>
+                    </div>
+                    <div class="model-option" data-model="llama-405b">
+                        <img src="https://i.ibb.co/27vm4vyj/llama.webp" alt="Meta AI Logo">
+                        <div class="model-info">
+                            <div class="model-name">Llama-3.1 405B</div>
+                            <div class="model-description">Meta's largest model</div>
+                        </div>
+                        <span class="model-badge">Pro</span>
+                    </div>
+                    <div class="model-option" data-model="searchllm">
+                        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='50%' x='50%' dominant-baseline='middle' text-anchor='middle' font-size='80'>🔍</text></svg>" alt="SearchLLM Logo">
+                        <div class="model-info">
+                            <div class="model-name">SearchLLM</div>
+                            <div class="model-description">Search-optimized language model</div>
+                        </div>
+                        <span class="model-badge">Pro</span>
+                    </div>
+                    <div class="model-option" data-model="o1">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg" alt="o1 Logo">
+                        <div class="model-info">
+                            <div class="model-name">o1</div>
+                            <div class="model-description">High-performance AI model</div>
+                        </div>
+                        <span class="model-badge">Pro</span>
+                    </div>
+                    <div class="model-option" data-model="o1-mini">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg" alt="o1 Mini Logo">
+                        <div class="model-info">
+                            <div class="model-name">o1 Mini</div>
+                            <div class="model-description">Lightweight o1 variant</div>
+                        </div>
+                        <span class="model-badge">Pro</span>
+                    </div>
+                    <div class="model-option" data-model="gemini-2-flash">
+                        <img src="https://i.ibb.co/pBkMg7hy/gimini.png" alt="Gemini Logo">
+                        <div class="model-info">
+                            <div class="model-name">Gemini 2.0 Flash</div>
+                            <div class="model-description">Ultra-fast Gemini variant</div>
+                        </div>
+                        <span class="model-badge">Pro</span>
+                    </div>
+                    <div class="model-option" data-model="gemini-1.5-pro">
+                        <img src="https://i.ibb.co/pBkMg7hy/gimini.png" alt="Gemini Logo">
+                        <div class="model-info">
+                            <div class="model-name">Gemini 1.5 PRO</div>
+                            <div class="model-description">Professional Gemini model</div>
+                        </div>
+                        <span class="model-badge">Pro</span>
+                    </div>
+                    <div class="model-option" data-model="grok">
+                        <img src="https://i.ibb.co/Qv3qzRVy/grok.jpg" alt="Grok Logo">
+                        <div class="model-info">
+                            <div class="model-name">GROK</div>
+                            <div class="model-description">xAI's conversational model</div>
+                        </div>
+                        <span class="model-badge">Pro</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="top-bar-right">
+            <div class="top-bar-auth">
+                <button id="authButton" class="auth-button">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                    <span>Connect</span>
+                </button>
+            </div>
+            <button class="top-bar-button" id="newChatButton" title="New Chat">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 5v14M5 12h14"/>
+                </svg>
+            </button>
+            <button class="top-bar-button" id="historyButton" title="Chat History">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <div class="chat-history-sidebar" id="chatHistorySidebar">
+        <div class="chat-history-header">
+            <h2>Chat History</h2>
+        </div>
+        <div id="chatHistoryList">
+        </div>
+    </div>
+
+    <main class="main-content" id="mainContent">
+        <div class="chat-container" id="chatContainer">
+            <div class="welcome-message">
+                <h1>Welcome to CordAI</h1>
+                <p>How can I assist you today?</p>
+            </div>
+        </div>
+
+        <div class="input-container">
+            <textarea 
+                id="userInput" 
+                placeholder="Type your message here..." 
+                rows="1"
+                autocomplete="off"
+            ></textarea>
+            <button id="sendButton">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>
+                </svg>
+                Send
+            </button>
+        </div>
+    </main>
+
+    <!-- Auth Modal -->
+    <div id="authModal" class="auth-modal">
+        <div class="auth-modal-content">
+            <div class="auth-modal-header">
+                <h2>Connect or Login</h2>
+                <button class="close-button" onclick="closeAuthModal()">×</button>
+            </div>
+            <div class="auth-options">
+                <button class="auth-option wallet-option" onclick="connectWallet()">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+                        <path d="M16 12h.01"></path>
+                    </svg>
+                    Connect Wallet
+                </button>
+                <div class="auth-divider">
+                    <span>or</span>
+                </div>
+                <button class="auth-option email-option" onclick="showEmailLogin()">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                        <polyline points="22,6 12,13 2,6"></polyline>
+                    </svg>
+                    Continue with Email
+                </button>
+            </div>
+            <form id="emailAuthForm" class="email-auth-form" style="display: none;">
+                <div class="form-tabs">
+                    <button type="button" class="form-tab active" onclick="switchTab('login')">Login</button>
+                    <button type="button" class="form-tab" onclick="switchTab('register')">Register</button>
+                </div>
+                <div class="form-group">
+                    <input type="email" id="emailInput" placeholder="Email" required>
+                </div>
+                <div class="form-group">
+                    <input type="password" id="passwordInput" placeholder="Password" required>
+                </div>
+                <button type="submit" class="submit-button">Login</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="/script.js"></script>
+    <script src="/cordai/scripts/code-blocks.js"></script>
+    <script src="/scripts/auth.js"></script>
+    <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const modelSelector = document.getElementById('modelSelector');
+            const modelDropdown = document.getElementById('modelDropdown');
+            const modelOptions = document.querySelectorAll('.model-option');
+            const modelSearch = document.getElementById('modelSearch');
+
+            // Add styles for pro options
+            modelOptions.forEach(option => {
+                const badge = option.querySelector('.model-badge');
+                if (badge && badge.textContent === 'Pro') {
+                    option.style.opacity = '0.7';
+                    option.style.cursor = 'not-allowed';
+                    option.title = 'Pro feature - Coming soon';
+                }
+            });
+
+            // Toggle dropdown on selector click
+            if (modelSelector) {
+                modelSelector.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    modelDropdown.classList.toggle('active');
+                    if (modelDropdown.classList.contains('active')) {
+                        modelSearch.focus();
+                    }
+                });
+            }
+
+            // Prevent dropdown from closing when clicking search
+            if (modelSearch) {
+                modelSearch.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                });
+
+                // Search functionality
+                modelSearch.addEventListener('input', (e) => {
+                    const searchTerm = e.target.value.toLowerCase();
+                    modelOptions.forEach(option => {
+                        const modelName = option.querySelector('.model-name').textContent.toLowerCase();
+                        const modelDesc = option.querySelector('.model-description').textContent.toLowerCase();
+                        const matches = modelName.includes(searchTerm) || modelDesc.includes(searchTerm);
+                        option.classList.toggle('hidden', !matches);
+                    });
+                });
+            }
+
+            // Model selection
+            modelOptions.forEach(option => {
+                option.addEventListener('click', (e) => {
+                    // Check if it's a pro option
+                    const badge = option.querySelector('.model-badge');
+                    if (badge && badge.textContent === 'Pro') {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        alert('This model is only available in the Pro version');
+                        return;
+                    }
+
+                    modelOptions.forEach(opt => opt.classList.remove('selected'));
+                    option.classList.add('selected');
+                    
+                    const img = option.querySelector('img').cloneNode(true);
+                    const name = option.querySelector('.model-name').textContent;
+                    
+                    modelSelector.innerHTML = '';
+                    modelSelector.appendChild(img);
+                    modelSelector.appendChild(document.createTextNode(name));
+                    const arrow = document.createElement('svg');
+                    arrow.setAttribute('width', '12');
+                    arrow.setAttribute('height', '12');
+                    arrow.setAttribute('viewBox', '0 0 24 24');
+                    arrow.setAttribute('fill', 'none');
+                    arrow.setAttribute('stroke', 'currentColor');
+                    arrow.setAttribute('stroke-width', '2');
+                    arrow.innerHTML = '<path d="M6 9l6 6 6-6"/>';
+                    modelSelector.appendChild(arrow);
+                    
+                    modelDropdown.classList.remove('active');
+                });
+            });
+
+            // Close dropdown when clicking outside
+            document.addEventListener('click', (e) => {
+                if (modelDropdown && !modelSelector.contains(e.target) && !modelDropdown.contains(e.target)) {
+                    modelDropdown.classList.remove('active');
+                }
+            });
+
+            // Initialize Chat Interface
+            new ChatInterface();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CordAI - Templates</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/styles/variables.css">
+    <link rel="stylesheet" href="/styles/themes.css">
+    <link rel="stylesheet" href="/styles/layout.css">
+    <link rel="stylesheet" href="/styles/sidebar.css">
+    <link rel="stylesheet" href="/styles/styles.css">
+    <script>
+        // Initialize theme before page loads
+        (function() {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        })();
+    </script>
+</head>
+<body>
+    <button class="menu-toggle" id="menuToggle">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 12h18M3 6h18M3 18h18"/>
+        </svg>
+    </button>
+
+    <aside class="sidebar">
+        <div class="logo">
+            <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMTIgMkM2LjQ4IDIgMiA2LjQ4IDIgMTJzNC40OCAxMCAxMCAxMCAxMC00LjQ4IDEwLTEwUzE3LjUyIDIgMTIgMnptNS4xNCAxNC4yN2wtMS4zNSAxLjM1Yy0uMjguMjgtLjczLjI4LTEuMDEgMGwtMi4yLTIuMi0yLjIgMi4yYy0uMjguMjgtLjczLjI4LTEuMDEgMGwtMS4zNS0xLjM1Yy0uMjgtLjI4LS4yOC0uNzMgMC0xLjAxbDIuMi0yLjItMi4yLTIuMmMtLjI4LS4yOC0uMjgtLjczIDAtMS4wMWwxLjM1LTEuMzVjLjI4LS4yOC43My0uMjggMS4wMSAwbDIuMiAyLjIgMi4yLTIuMmMuMjgtLjI4LjczLS4yOCAxLjAxIDBsMS4zNSAxLjM1Yy4yOC4yOC4yOC43MyAwIDEuMDFsLTIuMiAyLjIgMi4yIDIuMmMuMjguMjguMjguNzMgMCAxLjAxeiIgZmlsbD0iIzhiNWNmNiIvPjwvc3ZnPg==" alt="CordAI Logo" width="32" height="32">
+            CordAI
+        </div>
+        <nav class="nav-section">
+            <a href="/home" class="nav-item" id="homeLink">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                    <polyline points="9 22 9 12 15 12 15 22"/>
+                </svg>
+                <span>Home</span>
+            </a>
+            <a href="/cordai" class="nav-item" id="cordaiLink">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                </svg>
+                <span>CordAI</span>
+            </a>
+            <a href="/agents" class="nav-item" id="createAgentLink">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 2a5 5 0 0 1 5 5v2a5 5 0 0 1-10 0V7a5 5 0 0 1 5-5z"/>
+                    <path d="M16 19h6m-3-3v6M4 19a7 7 0 0 1 7-7h2a7 7 0 0 1 7 7"/>
+                </svg>
+                <span>Create Agent</span>
+            </a>
+            <a href="/templates" class="nav-item active" id="templatesLink">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/>
+                    <path d="M8 2v4M16 2v4M3 10h18"/>
+                </svg>
+                <span>Templates</span>
+            </a>
+            <a href="/api" class="nav-item" id="apiLink" style="position: relative;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20 12V8H6a2 2 0 0 1-2-2V4m16 8v4H6a2 2 0 0 0-2 2v2"/>
+                </svg>
+                <span>API</span>
+                <span style="position: absolute; top: -8px; right: -8px; background: var(--accent-primary); color: white; font-size: 0.6rem; padding: 2px 6px; border-radius: 10px; font-weight: 600;">SOON</span>
+            </a>
+            <div class="nav-footer">
+                <button class="nav-item theme-toggle" id="themeToggle">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="5"/>
+                        <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+                    </svg>
+                    <span>Theme</span>
+                </button>
+            </div>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="welcome-container">
+            <h1>Templates Coming Soon</h1>
+            <p>This feature is under development. Check back later!</p>
+        </div>
+    </main>
+
+    <script src="/script.js"></script>
+</body>
+</html>
