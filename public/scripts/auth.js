@@ -1,4 +1,3 @@
-// Use the globally initialized Supabase client
 const supabase = window.supabaseClient;
 
 let currentUser = null;
@@ -145,7 +144,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       throw new Error('Supabase client not initialized');
     }
 
-    // Check for existing session
+    // Check for existing session (look into errors, causing delays, need to update )
     const { data: { session }, error } = await supabase.auth.getSession();
     if (error) throw error;
     
@@ -207,3 +206,5 @@ window.showEmailLogin = showEmailLogin;
 window.switchTab = switchTab;
 window.logout = logout;
 window.openAuthModal = openAuthModal;
+
+// droped not working on this since db and wallet connect not needed for CEX coins analysis - Emad 
